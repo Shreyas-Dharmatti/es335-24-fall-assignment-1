@@ -17,39 +17,47 @@ np.random.seed(42)
 # Test case 1
 # Real Input and Real Output
 
+import pandas as pd
+import numpy as np
+
 N = 30
 P = 5
 X = pd.DataFrame(np.random.randn(N, P))
 y = pd.Series(np.random.randn(N))
 
-
-for criteria in ["information_gain", "gini_index"]:
-    tree = DecisionTree(criterion=criteria)  # Split based on Inf. Gain
+for i, criteria in enumerate(["information_gain", "gini_index"]):
+    tree = DecisionTree(criterion=criteria)
     tree.fit(X, y)
     y_hat = tree.predict(X)
-    tree.plot()
-    print("Criteria :", criteria)
+    filename = f"testcase1_tree_{i}_{criteria}"
+    tree.plot(filename=filename)
+    print("Criteria:", criteria)
     print("RMSE: ", rmse(y_hat, y))
     print("MAE: ", mae(y_hat, y))
 
 # Test case 2
 # Real Input and Discrete Output
 
+import pandas as pd
+import numpy as np
 N = 30
 P = 5
 X = pd.DataFrame(np.random.randn(N, P))
 y = pd.Series(np.random.randint(P, size=N), dtype="category")
 
-for criteria in ["information_gain", "gini_index"]:
-    tree = DecisionTree(criterion=criteria)  # Split based on Inf. Gain
-    tree.fit(X, y)
-    y_hat = tree.predict(X)
-    tree.plot()
-    print("Criteria :", criteria)
-    print("Accuracy: ", accuracy(y_hat, y))
+for i, criteria in enumerate(["information_gain", "gini_index"]):
+    tree = DecisionTree(criterion=criteria)  
+    tree.fit(X, y)  
+    y_hat = tree.predict(X)  
+    filename = f"testcase2_tree_{i}_{criteria}"  
+    tree.plot(filename=filename)  
+    
+    # Print evaluation metrics
+    print("Criteria:", criteria)
+    print("Accuracy:", accuracy(y_hat, y))
     for cls in y.unique():
-        print("Precision: ", precision(y_hat, y, cls))
-        print("Recall: ", recall(y_hat, y, cls))
+        print(f"Precision for class {cls}:", precision(y_hat, y, cls))
+        print(f"Recall for class {cls}:", recall(y_hat, y, cls))
 
 
 # Test case 3
@@ -57,33 +65,44 @@ for criteria in ["information_gain", "gini_index"]:
 
 N = 30
 P = 5
-X = pd.DataFrame({i: pd.Series(np.random.randint(P, size=N), dtype="category") for i in range(5)})
+X = pd.DataFrame({i: pd.Series(np.random.randint(P, size=N), dtype="category") for i in range(P)})
 y = pd.Series(np.random.randint(P, size=N), dtype="category")
 
-for criteria in ["information_gain", "gini_index"]:
-    tree = DecisionTree(criterion=criteria)  # Split based on Inf. Gain
-    tree.fit(X, y)
-    y_hat = tree.predict(X)
-    tree.plot()
-    print("Criteria :", criteria)
-    print("Accuracy: ", accuracy(y_hat, y))
+# One-hot encode the categorical features
+X = pd.get_dummies(X, dtype=int)
+
+for i, criteria in enumerate(["information_gain", "gini_index"]):
+    tree = DecisionTree(criterion=criteria)  
+    tree.fit(X, y)  
+    y_hat = tree.predict(X)  
+    filename = f"testcase3_tree_{i}_{criteria}"  
+    tree.plot(filename=filename)  
+    print("Criteria:", criteria)
+    print("Accuracy:", accuracy(y_hat, y))
     for cls in y.unique():
-        print("Precision: ", precision(y_hat, y, cls))
-        print("Recall: ", recall(y_hat, y, cls))
+        print(f"Precision for class {cls}:", precision(y_hat, y, cls))
+        print(f"Recall for class {cls}:", recall(y_hat, y, cls))
+
 
 # Test case 4
 # Discrete Input and Real Output
 
 N = 30
 P = 5
-X = pd.DataFrame({i: pd.Series(np.random.randint(P, size=N), dtype="category") for i in range(5)})
+X = pd.DataFrame({i: pd.Series(np.random.randint(P, size=N), dtype="category") for i in range(P)})
 y = pd.Series(np.random.randn(N))
 
-for criteria in ["information_gain", "gini_index"]:
-    tree = DecisionTree(criterion=criteria)  # Split based on Inf. Gain
-    tree.fit(X, y)
-    y_hat = tree.predict(X)
-    tree.plot()
-    print("Criteria :", criteria)
-    print("RMSE: ", rmse(y_hat, y))
-    print("MAE: ", mae(y_hat, y))
+# One-hot encode the categorical features
+X = pd.get_dummies(X, dtype=int)
+
+for i, criteria in enumerate(["information_gain", "gini_index"]):
+    tree = DecisionTree(criterion=criteria)  
+    tree.fit(X, y)  
+    y_hat = tree.predict(X)  
+    filename = f"testcase4_tree_{i}_{criteria}"  
+    tree.plot(filename=filename)  
+    
+    # Print evaluation metrics
+    print("Criteria:", criteria)
+    print("RMSE:", rmse(y_hat, y))
+    print("MAE:", mae(y_hat, y))
